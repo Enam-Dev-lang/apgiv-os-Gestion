@@ -1111,5 +1111,6 @@ st.markdown(
 '''
 
 path = Path("/mnt/data/app_apgiv_os_gestion_premium.py")
+path.parent.mkdir(parents=True, exist_ok=True)
 path.write_text(code, encoding="utf-8")
 print(f"Fichier créé : {path}")
