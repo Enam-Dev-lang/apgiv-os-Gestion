@@ -27,7 +27,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.markdown(f"""
+import streamlit as st
+
+st.set_page_config(page_title="APGIV OS Gestion", layout="wide")
+
+st.markdown("""
 <style>
 .stApp { background:#F7F8F5; }
 .block-container { padding-top: 0.5rem !important; }
