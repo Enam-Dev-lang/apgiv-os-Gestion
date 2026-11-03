@@ -29,86 +29,26 @@ st.set_page_config(
 
 st.markdown(f"""
 <style>
-    .stApp {{ background:{FOND}; }}
-    .block-container {{ padding-top: 0.5rem !important; }}
-    header[data-testid="stHeader"] {{ background: transparent !important; height: 0px !important; }}
-    [data-testid="collapsedControl"] {{
-        display: block !important; visibility: visible !important;
-        color: {VERT_FONCE} !important; z-index: 99999 !important;
-    }}
-    [data-testid="stSidebar"] {{
-        background: linear-gradient(180deg, {VERT_FONCE} 0%, #0A3D1F 100%) !important;
-        border-right: 3px solid {OR} !important;
-    }}
-    div[data-testid="stRadio"] {{ gap:12px; }}
-    div[data-testid="stRadio"] > div {{ gap:12px; }}
-    div[data-testid="stRadio"] label {{
-        background: transparent !important;
-        border: 1.5px solid rgba(255,255,255,0.7) !important;
-        border-radius: 22px !important;
-        padding: 12px 18px !important;
-        color: white !important;
-        font-weight: 600 !important;
-    }}
-    div[data-testid="stRadio"] label[data-checked="true"] {{
-        background: linear-gradient(90deg, #1DB954, #0E8A3E) !important;
-        border-left: 5px solid {OR} !important;
-        font-weight: 800 !important;
-    }}
-    .apgiv-header-final {{
-        width: 100vw; margin-left: -5rem; margin-right: -5rem; height: 92px;
-        background: #FFFFFF; display: flex; position: relative; overflow: hidden;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.07); border-bottom: 1px solid #E8EAEF; margin-bottom: 24px;
-    }}
-    .apgiv-logo-box {{
-        width: 88px; background: #062914; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 5;
-    }}
-    .apgiv-logo-box img {{
-        width: 52px; height: 52px; border-radius: 50%; object-fit: cover; background: white; padding: 2px;
-        box-shadow: 0 0 12px rgba(255,255,255,0.25);
-    }}
-    .apgiv-header-content {{
-        flex: 1; background: white; display: flex; flex-direction: column; justify-content: center; padding-left: 22px; z-index: 3;
-    }}
-    .apgiv-title-line {{ display: flex; align-items: baseline; gap: 8px; line-height: 1; }}
-    .apgiv-title-os {{ font-weight: 900; font-size: 26px; color: #0E4D2E; }}
-    .apgiv-title-gestion {{ font-weight: 800; font-size: 26px; color: #C8A040; }}
-    .apgiv-slogan {{
-        font-size: 12.5px; color: #000000; font-style: italic; font-weight: 500; margin-top: 6px;
-        border-top: 1px solid #EDEEF2; padding-top: 5px; display: inline-block; width: fit-content; padding-right: 20px;
-    }}
-    .apgiv-waves {{ position: absolute; right: 0; top: 0; width: 58%; height: 100%; z-index: 2; pointer-events: none; }}
-    .wave {{ position: absolute; right: -10%; width: 110%; height: 55px; border-radius: 100% 0 0 0; }}
-    .wave-1 {{ bottom: -18px; background: #0E4D2E; transform: rotate(-6deg) skewX(-12deg); opacity: 0.95; }}
-    .wave-2 {{
-        bottom: -2px; background: linear-gradient(90deg, #C8A040 0%, #E8C86A 50%, #C8A040 100%);
-        height: 22px; transform: rotate(-7deg) skewX(-12deg); box-shadow: 0 2px 10px rgba(200,160,64,0.4); z-index: 3;
-    }}
-    .wave-3 {{
-        top: -8px; right: -15%; width: 115%; height: 68px;
-        background: linear-gradient(105deg, #062914 0%, #0E4D2E 40%, #1A6B3C 65%, #C8A040 90%, #E8C86A 100%);
-        transform: rotate(-8deg) skewX(-10deg); opacity: 0.98; clip-path: ellipse(90% 80% at 80% 20%);
-    }}
-    .kpi-card {{
-        background:white; border-radius:18px; padding:18px 20px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.08); display:flex; align-items:flex-start; gap:16px;
-        position:relative; overflow:hidden; height:115px; border:1px solid #EAECF0;
-    }}
-    .kpi-card::before {{ content:''; position:absolute; top:0; left:0; width:6px; height:100%; }}
-    .kpi-ventes::before {{ background: #0E4D2E; }}
-    .kpi-alerte::before {{ background: linear-gradient(180deg, #F97316, #EF4444); }}
-    .kpi-top::before {{ background: #0E4D2E; }}
-    .kpi-icon {{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; color:white; }}
-    .kpi-icon-ventes {{ background: #0E4D2E; }}
-    .kpi-icon-alerte {{ background: #F97316; }}
-    .kpi-icon-top {{ background: #0E4D2E; }}
-    .section-header {{
-        background: linear-gradient(90deg, #062914 0%, #0E4D2E 55%, #C8A040 100%);
-        border-radius:14px; padding:14px 20px; display:flex; align-items:center; gap:14px;
-        box-shadow: 0 6px 18px rgba(10,46,28,0.25); border:1.5px solid #C8A040;
-        margin:18px 0 14px 0;
-    }}
-    .section-header-gold-bar {{ width:5px; height:22px; background:#C8A040; border-radius:10px; }}
+.stApp { background:#F7F8F5; }
+.block-container { padding-top: 0.5rem !important; }
+header[data-testid="stHeader"] { background: transparent !important; height: 0px !important; }
+[data-testid="collapsedControl"] { display: block !important; visibility: visible !important; color: #062914 !important; z-index: 99999 !important; }
+[data-testid="stSidebar"] { background: linear-gradient(180deg, #062914 0%, #0A3D1F 100%) !important; border-right: 3px solid #C8A040 !important; }
+div[data-testid="stRadio"] { gap:12px; }
+div[data-testid="stRadio"] > div { gap:12px; }
+div[data-testid="stRadio"] label {
+    background: transparent !important;
+    border: 1.5px solid rgba(255,255,255,0.7) !important;
+    border-radius: 22px !important;
+    padding: 12px 18px !important;
+    color: white !important;
+    font-weight: 600 !important;
+}
+div[data-testid="stRadio"] label[data-checked="true"] {
+    background: linear-gradient(90deg, #1DB954, #0E8A3E) !important;
+    border-left: 5px solid #C8A040 !important;
+    font-weight: 800 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
