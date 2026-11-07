@@ -1,4 +1,39 @@
 import streamlit as st
+import hashlib
+
+# --- PORTE SECURITE APGIV ---
+def check_password():
+    if "auth" not in st.session_state:
+        st.session_state["auth"] = False
+        st.session_state["role"] = None
+
+    if st.session_state["auth"]:
+        return True
+
+    st.title("🔒 APGIV OS Gestion - Acces Securité")
+    st.warning("Acces reserve au personnel APGIV. Veuillez vous connecter.")
+    user = st.text_input("Utilisateur").strip().lower()
+    pwd = st.text_input("Mot de passe", type="password")
+
+    if st.button("Se connecter"):
+        # Mots de passe dans Secrets, JAMAIS en clair ici
+        users = st.secrets["users"]
+        # users = {"patron": {"pwd_hash": "...", "role": "patron"}}
+        h = hashlib.sha256(pwd.encode()).hexdigest()
+        if user in users and h == users[user]["pwd_hash"]:
+            st.session_state["auth"] = True
+            st.session_state["role"] = users[user]["role"]
+            st.session_state["user"] = user
+            st.rerun()
+        else:
+            st.error("Identifiants incorrects. Tentative enregistree.")
+            # Ici tu ajoutes un compteur pour bloquer apres 5 essais
+    return False
+
+if not check_password():
+    st.stop()
+
+import streamlit as st
 import pandas as pd
 from datetime import datetime
 import os
