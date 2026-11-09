@@ -3,6 +3,24 @@ import hashlib
 import gspread
 from google.oauth2.service_account import Credentials
 
+# --- PAGE DE GARDE APGIV ---
+if "entrer" not in st.session_state:
+    st.session_state.entrer = False
+
+if not st.session_state.entrer:
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.image("assets/Logo.jpeg", use_container_width=True)
+        st.markdown("<h2 style='text-align: center;'>APGIV OS GESTION</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center;'>Gestion & Contrôle - Accès 100% Sécurisé</p>", unsafe_allow_html=True)
+        st.write("")
+        if st.button("ENTRER ➡️", use_container_width=True):
+            st.session_state.entrer = True
+            st.rerun()
+    st.stop()
+# --- FIN PAGE DE GARDE ---
+
+
 def get_client():
     creds = Credentials.from_service_account_info(
         dict(st.secrets["gcp_service_account"]),
