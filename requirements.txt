@@ -2,3 +2,5 @@ streamlit
 fpdf2
 Pillow
 pandas
+gspread
+google-auth

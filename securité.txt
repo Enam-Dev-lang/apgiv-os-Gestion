@@ -1,0 +1,7 @@
+patron
+APGIVOS-patron-2026
+employe
+APGIVOS-employe.e-2026
+
+compte de service
+apgiv-pin@apgiv-config.iam.gserviceaccount.com

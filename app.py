@@ -1,5 +1,36 @@
 import streamlit as st
 import hashlib
+import gspread
+from google.oauth2.service_account import Credentials
+
+def get_client():
+    creds = Credentials.from_service_account_info(
+        dict(st.secrets["gcp_service_account"]),
+        scopes=["https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive"]
+    )
+    return gspread.authorize(creds)
+
+def get_users():
+    # 1. On essaie la Sheet d'abord
+    try:
+        sh = get_client().open("APGIV-Config")
+        ws = sh.sheet1
+        users = {}
+        # On lit à partir de la ligne 2, A=user, B=hash, C=role
+        for row in ws.get_all_values()[1:]:
+            if len(row) >= 3 and row[0]:
+                users[row[0].strip().lower()] = {"pwd_hash": row[1].strip(), "role": row[2].strip()}
+        if users:
+            return users
+    except Exception:
+        pass
+    # 2. Sinon, on retombe sur Secrets
+    return dict(st.secrets["users"])
+
+def hash_pin(pin):
+    return hashlib.sha256(pin.encode()).hexdigest()
+
 
 # --- PORTE SECURITE APGIV ---
 def check_password():
@@ -17,7 +48,7 @@ def check_password():
 
     if st.button("Se connecter"):
         # Mots de passe dans Secrets, JAMAIS en clair ici
-        users = st.secrets["users"]
+        users = get_users()
         # users = {"patron": {"pwd_hash": "...", "role": "patron"}}
         h = hashlib.sha256(pwd.encode()).hexdigest()
         if user in users and h == users[user]["pwd_hash"]:
