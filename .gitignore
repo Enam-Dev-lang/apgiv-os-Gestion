@@ -3,3 +3,4 @@
 *.json
 fix_secrets.py
 verif.py
+*.pdf
