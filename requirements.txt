@@ -1,6 +1,6 @@
 streamlit
-fpdf2
-Pillow
 pandas
+fpdf2
+requests
 gspread
 google-auth
