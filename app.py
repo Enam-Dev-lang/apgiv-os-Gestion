@@ -130,7 +130,7 @@ def calculer_livraison(zone_nom, sous_total, zones):
         return 0, f"Zone : {zone_nom} - {z['Delai']}"
     return frais, f"Zone : {zone_nom} - {z['Delai']} - Frais {frais} F"
 
-st.set_page_config(page_title="APGIV OS Gestion", page_icon=LOGO_PATH if os.path.exists(LOGO_PATH) else "🌿", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="APGIV OS Gestion", page_icon="Logo(1).png", layout="wide")
 
 def get_logo_b64():
     if os.path.exists(LOGO_PATH):
