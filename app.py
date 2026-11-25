@@ -913,7 +913,7 @@ elif menu == "Clients & Livraison":
             cl_quartier = st.text_input("Quartier", placeholder="Agoe")
         with c2:
             cl_ville = st.selectbox("Ville", ["Lome", "Atakpame", "Kara", "Sokode", "Dapaong", "Kpalime", "Autre"])
-            cl_type = st.selectbox("Type", ["Particulier", "Distributeur", "Revendeur", "Grossiste"])
+            cl_type = st.selectbox("Type", ["particulier", "distributeur", "revendeur", "grossiste"])
             if st.button("Creer Client", type="primary", width='stretch'):
                 if cl_nom and cl_tel:
                     try:
