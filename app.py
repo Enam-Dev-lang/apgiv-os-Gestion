@@ -917,7 +917,7 @@ elif menu == "Clients & Livraison":
             if st.button("Creer Client", type="primary", width='stretch'):
                 if cl_nom and cl_tel:
                     try:
-                        supa_insert("clients", {"nom": cl_nom, "telephone": cl_tel, "quartier": cl_quartier, "ville": cl_ville, "type_client": cl_type})
+                        supa_insert("clients", {"nom": cl_nom, "telephone": cl_tel, "quartier": cl_quartier, "ville": cl_ville, "type": cl_type})
                         st.session_state.clients = charger_clients_supabase()
                         st.success(f"Client {cl_nom} cree !")
                         st.rerun()
