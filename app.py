@@ -50,7 +50,9 @@ def supa_insert(table, data):
     return r.json()[0]
 
 def supa_update(table, id_col, id_val, data):
-    r = requests.patch(f"{SUPABASE_URL}/{table}?{id_col}=eq.{id_val}&apikey={SUPABASE_KEY}", json=data, headers={"Content-Type": "application/json", "Prefer": "return=representation"}, timeout=15)
+    # CORRECTION : encoder id_val pour le filtre eq. (ex: cle avec caracteres speciaux)
+    id_val_enc = urllib.parse.quote(str(id_val), safe='')
+    r = requests.patch(f"{SUPABASE_URL}/{table}?{id_col}=eq.{id_val_enc}&apikey={SUPABASE_KEY}", json=data, headers={"Content-Type": "application/json", "Prefer": "return=representation"}, timeout=15)
     r.raise_for_status()
     return r.json()
 
@@ -80,7 +82,8 @@ def charger_agents_supabase():
         return []
 
 def supa_delete(table, id_col, id_val):
-    r = requests.delete(f"{SUPABASE_URL}/{table}?{id_col}=eq.{id_val}&apikey={SUPABASE_KEY}", timeout=15)
+    id_val_enc = urllib.parse.quote(str(id_val), safe='')
+    r = requests.delete(f"{SUPABASE_URL}/{table}?{id_col}=eq.{id_val_enc}&apikey={SUPABASE_KEY}", timeout=15)
     r.raise_for_status()
     return True
 
@@ -129,6 +132,26 @@ def calculer_livraison(zone_nom, sous_total, zones):
     if frais == 0:
         return 0, f"Zone : {zone_nom} - {z['Delai']}"
     return frais, f"Zone : {zone_nom} - {z['Delai']} - Frais {frais} F"
+
+# CORRECTION 1 : charger_pin / sauvegarder_pin DOIVENT etre definis AVANT leur utilisation dans st.session_state
+def charger_pin():
+    try:
+        rows = supa_get("parametres")
+        for r in rows:
+            if r.get("cle") == "pin_proprio":
+                return r.get("valeur")
+    except Exception:
+        pass
+    return "1234"
+
+def sauvegarder_pin(new_pin):
+    try:
+        supa_update("parametres", "cle", "pin_proprio", {"valeur": new_pin})
+    except Exception:
+        try:
+            supa_insert("parametres", {"cle": "pin_proprio", "valeur": new_pin})
+        except Exception:
+            pass
 
 st.set_page_config(page_title="APGIV OS Gestion", page_icon="Logo(1).png", layout="wide")
 
@@ -255,7 +278,7 @@ if 'ventes' not in st.session_state:
 if 'panier' not in st.session_state:
     st.session_state.panier = []
 if 'pin' not in st.session_state:
-    st.session_state.pin = "1234"
+    st.session_state.pin = charger_pin()
 if 'auth_compta' not in st.session_state:
     st.session_state.auth_compta = False
 if 'derniere_vente' not in st.session_state:
@@ -682,7 +705,8 @@ if menu == "Dashboard":
                     st.session_state.stock = [s for s in st.session_state.stock if s["Produit"] != prod_act["Produit"]]
                     st.success(f"{prod_act['Produit']} supprimé !")
                     st.rerun()
-    st.markdown(f"""<div class="section-header" style="background: linear-gradient(90deg, {VERT} 0%, {VERT_FONCE} 60%, {OR} 100%);"><div class="section-header-gold-bar"></div><div style="color:white; font-weight:800; font-size:14px">CAISSE INTELLIGENTE - VENTE + LIVRAISON + FACTURE PDF + Envoie WhatsApp</div></div>""", unsafe_allow_html=True)
+    # CORRECTION 3 : TOUT ce bloc Caisse etait hors du if menu == "Dashboard" -> il s'affichait partout. Maintenant indente dedans.
+    st.markdown(f"""<div class="section-header" style="background: linear-gradient(90deg, {VERT} 0%, {VERT_FONCE} 60%, {OR} 100%);"><div class="section-header-gold-bar"></div><div style="color:white; font-weight:800; font-size:14px">CAISSE INTELLIGENTE - VENTE + LIVRAISON + FACTURE PDF + Envoie 【entity-WhatsApp¦canonical_name=WhatsApp】</div></div>""", unsafe_allow_html=True)
     col1,col2 = st.columns(2, gap="large")
     with col1:
         produit_sel = st.selectbox("Produit *", [s["Produit"] for s in st.session_state.stock])
@@ -1339,6 +1363,7 @@ elif menu == "Inventaire":
                     st.error("Confirmation differente")
                 else:
                     st.session_state.pin = new_pin
+                    sauvegarder_pin(new_pin)
                     st.success("✅ PIN change avec succes ! Nouveau PIN : " + new_pin)
                     st.balloons()
 
@@ -1616,6 +1641,7 @@ elif menu == "Compta Privee":
                 <p style='margin:6px 0 0 0; font-size:13px'>• Nombre de ventes aujourd'hui : <b>{len(ventes_jour)}</b><br>
                 - Chiffre d'affaires du jour : <b>{ca_jour} F CFA</b><br>
                 - Benefice jour (42%) : <b>{int(ca_jour*0.42)} F</b><br>
+                - Produits les plus vendus : <b```python
                 - Produits les plus vendus : <b>{', '.join(bilan_produit.index[:2]) if len(bilan_produit)>0 else 'Aucun'}</b><br>
                 - Top vendeur du jour : <b>{bilan_agent.index[0] if len(bilan_agent)>0 else 'Aucun'}</b><br>
                 - Stock critique (&lt;20) : <b>{len([s for s in st.session_state.stock if s['Stock']<20])} lots</b></p>
