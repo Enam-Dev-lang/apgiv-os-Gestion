@@ -146,12 +146,17 @@ def charger_pin():
 
 def sauvegarder_pin(new_pin):
     try:
-        supa_update("parametres", "cle", "pin_proprio", {"valeur": new_pin})
-    except Exception:
-        try:
+        rows = supa_get("parametres")
+        existe = False
+        for r in rows:
+            if r.get("cle") == "pin_proprio":
+                existe = True
+        if existe:
+            supa_update("parametres", "cle", "pin_proprio", {"valeur": new_pin})
+        else:
             supa_insert("parametres", {"cle": "pin_proprio", "valeur": new_pin})
-        except Exception:
-            pass
+    except Exception as e:
+        print("Erreur sauvegarder_pin:", e)
 
 st.set_page_config(page_title="APGIV OS Gestion", page_icon="Logo(1).png", layout="wide")
 
