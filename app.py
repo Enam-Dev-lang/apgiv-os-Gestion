@@ -1667,6 +1667,7 @@ elif menu == "Compta Privee":
                 if st.button("Changer PIN", type="primary"):
                     if new_pin and len(new_pin)>=4:
                         st.session_state.pin = new_pin
+                        sauvegarder_pin(new_pin)
                         st.success(f"PIN modifie avec succes ! Nouveau PIN : {new_pin}")
                     else:
                         st.error("PIN trop court (4 chiffres min)")
